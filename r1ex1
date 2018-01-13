@@ -1,0 +1,20 @@
+set firewall name outgoing default-action 'accept'
+set firewall name outgoing rule 10 action 'reject'
+set firewall name outgoing rule 10 description 'Bad dog! no DNS for you'
+set firewall name outgoing rule 10 source address '!172.16.88.100'
+set firewall name outgoing rule 10 protocol tcp_udp
+set firewall name outgoing rule 10 destination port 53
+set interfaces ethernet eth0 firewall out name outgoing 
+commit
+
+set service dhcp-server shared-network-name srv subnet 172.16.88.0/24 default-router '172.16.88.254'
+set service dhcp-server shared-network-name srv subnet 172.16.88.0/24 dns-server '172.16.88.100'
+set service dhcp-server shared-network-name srv subnet 172.16.88.0/24 ntp-server '172.16.88.100'
+set service dhcp-server shared-network-name srv subnet 172.16.88.0/24 start 172.16.88.10 stop '172.16.88.99'
+commit
+
+set service dhcp-server shared-network-name kasutajad subnet 172.16.99.0/24 default-router '172.16.99.254'
+set service dhcp-server shared-network-name kasutajad subnet 172.16.99.0/24 dns-server '172.16.88.100'
+set service dhcp-server shared-network-name kasutajad subnet 172.16.99.0/24 ntp-server '172.16.88.100'
+set service dhcp-server shared-network-name kasutajad subnet 172.16.99.0/24 start 172.16.99.10 stop '172.16.99.99'
+commit
